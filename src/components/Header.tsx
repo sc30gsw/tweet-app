@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import useCurrentUser from "../lib/UseCurretUser";
 
 const StyledHeader = styled.header`
 	padding-top: 10px;

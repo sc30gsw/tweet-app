@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import useCurrentUser from "../../lib/UseCurretUser";
+import useCurrentUser from "../../lib/UseCurrentUser";
 
 const StyledContents = styled.div`
 	width: 100%;

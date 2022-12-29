@@ -1,7 +1,8 @@
+import { ArrowDropDown } from "@mui/icons-material";
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import useCurrentUser from "../../lib/UseCurrentUser";
+import { useAuthContext } from "../../context/AuthProvider";
 
 const StyledContents = styled.div`
 	width: 100%;
@@ -23,10 +24,11 @@ const StyledContentPost = styled.div`
 	border-radius: 3px;
 	box-shadow: 0 0 10px rgb(41 41 41 / 20%);
 	background-image: url("images/img1.jpeg");
+	z-index: 1;
+	border-radius: 3px;
 `;
 
 const StyledMore = styled.div`
-	position: absolute;
 	cursor: pointer;
 	top: 20px;
 	right: 30px;
@@ -34,6 +36,12 @@ const StyledMore = styled.div`
 	height: 100px;
 	width: 80px;
 	text-align: right;
+	position: absolute;
+	:hover {
+		ul {
+			display: block;
+		}
+	}
 `;
 
 const StyledMoreUL = styled.ul`
@@ -44,9 +52,24 @@ const StyledMoreUL = styled.ul`
 	font-size: 12px;
 	background-color: #fff;
 	border: 1px solid #ddd;
-	display: none;
 	box-shadow: 1px 1px 2px rgb(0 0 0 / 20%);
 	border-radius: 3px;
+	display: none;
+	:hover {
+		background-color: #57c3e9;
+		a {
+			color: #fff;
+		}
+	}
+`;
+
+const StyledMoreLI = styled.li`
+	padding: 5px;
+	display: block;
+	a {
+		color: gray;
+		text-decoration: none;
+	}
 `;
 
 const StyledPostText = styled.p`
@@ -67,7 +90,7 @@ const StyledPostUsername = styled.span`
 	bottom: 30px;
 	z-index: 2;
 	font-size: 13px;
-	& a {
+	a {
 		text-decoration: none;
 		display: block;
 		color: #aaa;
@@ -75,31 +98,36 @@ const StyledPostUsername = styled.span`
 			text-decoration: underline;
 		}
 	}
-	& span {
+	span {
 		font-size: 9px;
 		display: block;
 	}
 `;
+
 const Contents = () => {
-	const user = useCurrentUser();
+	const user = useAuthContext();
 	return (
 		<StyledContents>
 			<StyledContentPost>
 				<StyledMore>
-					<span>
-						<img src="images/arrow.png" />
-					</span>
+					<ArrowDropDown
+						style={{
+							position: "relative",
+							color: "gray",
+							fontSize: "35px",
+						}}
+					/>
 					<StyledMoreUL>
-						<li>
+						<StyledMoreLI>
 							<Link to="#">詳細</Link>
-						</li>
+						</StyledMoreLI>
 					</StyledMoreUL>
 				</StyledMore>
 				<StyledPostText>投稿</StyledPostText>
 				<StyledPostUsername>
 					<Link to="#">
 						<span>投稿者</span>
-						{user?.username}
+						{user.currentUser?.displayName}
 					</Link>
 				</StyledPostUsername>
 			</StyledContentPost>

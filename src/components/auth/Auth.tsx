@@ -3,8 +3,6 @@ import {
 	Avatar,
 	Box,
 	Button,
-	Checkbox,
-	FormControlLabel,
 	Grid,
 	Paper,
 	TextField,
@@ -16,6 +14,19 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
+import styled from "styled-components";
+
+const StyledChangeDiv = styled.div`
+	margin-top: 10px;
+	& a {
+		color: #1976d2;
+		text-decoration: none;
+	}
+	& :hover {
+		text-decoration: underline;
+		opacity: 0.7;
+	}
+`;
 
 const Auth = () => {
 	const [name, setName] = useState<string>("");
@@ -43,6 +54,7 @@ const Auth = () => {
 				alert(e.message);
 			});
 	};
+
 	return (
 		<>
 			<Container>
@@ -51,8 +63,8 @@ const Auth = () => {
 						elevation={3}
 						sx={{
 							p: 4,
-							height: "400px",
-							width: "280px",
+							height: "100%",
+							width: "50%",
 							m: "20px auto",
 						}}
 					>
@@ -61,7 +73,7 @@ const Auth = () => {
 								<LockOutlined />
 							</Avatar>
 							<Typography variant={"h5"} sx={{ m: "30px" }}>
-								Sign In
+								Sign Up
 							</Typography>
 						</Grid>
 						<TextField
@@ -92,13 +104,6 @@ const Auth = () => {
 							value={password}
 							onChange={handleChangePassword}
 						/>
-						<FormControlLabel
-							labelPlacement="end"
-							label="パスワードを忘れました"
-							control={
-								<Checkbox name="checkboxA" size="small" color="primary" />
-							}
-						/>
 						<Box mt={3}>
 							<Button
 								type="submit"
@@ -106,12 +111,13 @@ const Auth = () => {
 								variant="contained"
 								fullWidth
 							>
-								Sign in
+								Sign Up
 							</Button>
 						</Box>
-						<div style={{ marginTop: "10px" }}>
-							アカウントをお持ちの方は<Link to="#">こちら</Link>
-						</div>
+						<StyledChangeDiv>
+							アカウントをお持ちの方は
+							<Link to="/login">こちら</Link>
+						</StyledChangeDiv>
 					</Paper>
 				</form>
 			</Container>

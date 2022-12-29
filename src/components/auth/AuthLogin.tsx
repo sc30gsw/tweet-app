@@ -3,18 +3,20 @@ import {
 	Avatar,
 	Box,
 	Button,
+	Checkbox,
+	Container,
+	FormControlLabel,
 	Grid,
 	Paper,
 	TextField,
 	Typography,
 } from "@mui/material";
 import { teal } from "@mui/material/colors";
-import { Container } from "@mui/system";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../../firebase/firebase";
 import styled from "styled-components";
+import { auth } from "../../firebase/firebase";
 
 const StyledChangeDiv = styled.div`
 	margin-top: 10px;
@@ -28,37 +30,30 @@ const StyledChangeDiv = styled.div`
 	}
 `;
 
-const Auth = () => {
-	const [name, setName] = useState<string>("");
+const AuthLogin = () => {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 
-	const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) =>
-		setName(e.currentTarget.value);
 	const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) =>
 		setEmail(e.currentTarget.value);
 	const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) =>
 		setPassword(e.currentTarget.value);
 
 	const navigate = useNavigate();
-	const Register = async (e: React.FormEvent<HTMLFormElement>) => {
+	const Login = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		await createUserWithEmailAndPassword(auth, email, password)
+		await signInWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
-				updateProfile(userCredential.user, {
-					displayName: name,
-				});
 				navigate("/");
 			})
 			.catch((e) => {
 				alert(e.message);
 			});
 	};
-
 	return (
 		<>
 			<Container>
-				<form onSubmit={Register}>
+				<form onSubmit={Login}>
 					<Paper
 						elevation={3}
 						sx={{
@@ -78,15 +73,6 @@ const Auth = () => {
 						</Grid>
 						<TextField
 							style={{ marginTop: "0.5em", marginBottom: "0.5em" }}
-							name="name"
-							label="name"
-							variant="outlined"
-							fullWidth
-							value={name}
-							onChange={handleChangeName}
-						/>
-						<TextField
-							style={{ marginTop: "0.5em", marginBottom: "0.5em" }}
 							name="email"
 							label="email"
 							variant="outlined"
@@ -104,6 +90,13 @@ const Auth = () => {
 							value={password}
 							onChange={handleChangePassword}
 						/>
+						<FormControlLabel
+							labelPlacement="end"
+							label="パスワードを忘れました"
+							control={
+								<Checkbox name="checkboxA" size="small" color="primary" />
+							}
+						/>
 						<Box mt={3}>
 							<Button
 								type="submit"
@@ -111,12 +104,12 @@ const Auth = () => {
 								variant="contained"
 								fullWidth
 							>
-								Sign Up
+								Sign In
 							</Button>
 						</Box>
 						<StyledChangeDiv>
-							アカウントをお持ちの方は
-							<Link to="/login">こちら</Link>
+							アカウントをお持ちでない方は
+							<Link to="/signup">こちら</Link>
 						</StyledChangeDiv>
 					</Paper>
 				</form>
@@ -125,4 +118,4 @@ const Auth = () => {
 	);
 };
 
-export default Auth;
+export default AuthLogin;

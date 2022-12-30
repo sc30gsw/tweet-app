@@ -3,6 +3,8 @@ import {
 	DocumentData,
 	getDocs,
 	onSnapshot,
+	orderBy,
+	query,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -23,7 +25,8 @@ const Contents = () => {
 	const [posts, setPosts] = useState<DocumentData[]>([]);
 	useEffect(() => {
 		const postData = collection(db, "posts");
-		onSnapshot(postData, (querySnapshot) => {
+		const latestPosts = query(postData, orderBy("createAt", "desc"));
+		onSnapshot(latestPosts, (querySnapshot) => {
 			setPosts(querySnapshot.docs.map((doc) => doc.data()));
 		});
 	}, []);

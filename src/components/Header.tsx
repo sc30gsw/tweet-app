@@ -30,7 +30,7 @@ const StyledHeaderRightBar = styled.div`
 	justify-content: space-evenly;
 	float: right;
 	text-align: right;
-	& a {
+	a {
 		text-decoration: none;
 		padding: 8px 20px;
 		font-size: 14px;
@@ -46,11 +46,36 @@ const StyledHeaderRightBar = styled.div`
 	}
 `;
 
-const StyledHeaderLogoutBar = styled.div`
-	width: 48.2%;
+const StyledHeaderUserNavBar = styled.div`
 	float: right;
 	text-align: right;
-	& button {
+	position: relative;
+	height: 100px;
+	right: 0;
+	span {
+		top: 5px;
+		display: block;
+		float: left;
+		margin-left: 30px;
+		width: 150px;
+		height: 50px;
+		font-size: 1em;
+		cursor: pointer;
+		position: relative;
+		:after {
+			content: "▼";
+			font-size: 0.7em;
+			margin-left: 4px;
+		}
+		:hover {
+			ul {
+				display: block;
+			}
+		}
+	}
+	.post {
+		width: 120px;
+		margin-left: 10px;
 		padding: 8px 20px;
 		font-size: 14px;
 		border: 2px solid #57c3e9;
@@ -59,10 +84,51 @@ const StyledHeaderLogoutBar = styled.div`
 		text-align: center;
 		border-radius: 3px;
 		display: inline-block;
+		text-decoration: none;
+		transition: 0.5s;
+		:hover {
+			opacity: 0.7;
+		}
+	}
+`;
+
+const UserInfoUL = styled.ul`
+	display: none;
+	position: absolute;
+	top: 46px;
+	right: 0;
+	border-left: 1px solid #d8d8d8;
+	border-right: 1px solid #d8d8d8;
+	box-shadow: 1px 2px 5px rgb(0 0 0 / 10%);
+	li {
+		background-color: #f0f0f0;
+		list-style: none;
+	}
+	a {
+		display: block;
+		padding: 10px 20px;
+		text-align: left;
+		border-bottom: 1px solid #d8d8d8;
+		text-decoration: none;
+		color: #666666;
+		transition: 0.5s;
+		:hover {
+			color: #57c3e9;
+		}
+	}
+	button {
+		padding: 10px 26px;
+		font-size: 14px;
+		outline: none;
+		border: none;
+		font-size: 1em;
+		text-align: left;
+		color: #666666;
 		background: transparent;
+		transition: 0.5s;
 		:hover {
 			cursor: pointer;
-			opacity: 0.7;
+			color: #57c3e9;
 		}
 	}
 `;
@@ -104,9 +170,28 @@ const Header = () => {
 					<Link to="/">PicTweet</Link>
 				</StyledHeaderTitle>
 				{user.currentUser ? (
-					<StyledHeaderLogoutBar>
-						<button onClick={logout}>ログアウト</button>
-					</StyledHeaderLogoutBar>
+					<StyledHeaderUserNavBar>
+						<span>
+							{user.currentUser.displayName}
+							<UserInfoUL>
+								<li>
+									<Link
+										to={`/users/${user.currentUser.uid}`}
+										state={{
+											username: user.currentUser.displayName,
+											userId: user.currentUser.uid,
+										}}
+									>
+										マイページ
+									</Link>
+									<button onClick={logout}>ログアウト</button>
+								</li>
+							</UserInfoUL>
+						</span>
+						<Link className="post" to="#">
+							投稿する
+						</Link>
+					</StyledHeaderUserNavBar>
 				) : (
 					<StyledHeaderRightBar>
 						<Link to="/login">ログイン</Link>

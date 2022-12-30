@@ -2,6 +2,7 @@ import {
 	collection,
 	DocumentData,
 	getDocs,
+	onSnapshot,
 	query,
 	where,
 } from "firebase/firestore";
@@ -42,7 +43,7 @@ const Mypage = () => {
 
 	const postData = collection(db, "posts");
 	const userPostData = query(postData, where("userId", "==", userId));
-	getDocs(userPostData).then((querySnapshot) => {
+	onSnapshot(userPostData, (querySnapshot) => {
 		setPosts(querySnapshot.docs.map((doc) => doc.data()));
 	});
 

@@ -1,4 +1,9 @@
-import { collection, DocumentData, getDocs } from "firebase/firestore";
+import {
+	collection,
+	DocumentData,
+	getDocs,
+	onSnapshot,
+} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { db } from "../../firebase/firebase";
@@ -18,7 +23,7 @@ const Contents = () => {
 	const [posts, setPosts] = useState<DocumentData[]>([]);
 	useEffect(() => {
 		const postData = collection(db, "posts");
-		getDocs(postData).then((querySnapshot) => {
+		onSnapshot(postData, (querySnapshot) => {
 			setPosts(querySnapshot.docs.map((doc) => doc.data()));
 		});
 	}, []);

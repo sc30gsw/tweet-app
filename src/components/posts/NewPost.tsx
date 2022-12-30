@@ -1,8 +1,13 @@
-import React from "react";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useAuthContext } from "../../context/AuthProvider";
+import { db } from "../../firebase/firebase";
 import useAuthState from "../../lib/AuthState";
 import Footer from "../Footer";
 import Header from "../Header";
+import { v4 as uuid } from "uuid";
 
 const StyledContents = styled.div`
 	width: 100%;
@@ -52,19 +57,65 @@ const StyledSubmitBtn = styled.input`
 	color: #fff;
 	border: 0;
 	font-size: 18px;
+	transition: 0.5s;
+	:hover {
+		opacity: 0.7;
+		cursor: pointer;
+	}
 `;
 
 const NewPost = () => {
 	useAuthState();
+	const currentUser = useAuthContext().currentUser;
+	const [imageUrl, setImageUrl] = useState<string | null>();
+	const [text, setText] = useState<string>("");
+
+	const handleChangeImageUrl = (e: React.ChangeEvent<HTMLInputElement>) =>
+		setImageUrl(e.target.value);
+
+	const handleChangeText = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+		setText(e.target.value);
+
+	const navigate = useNavigate();
+
+	const createPost = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const newPost = {
+			createAt: serverTimestamp(),
+			id: uuid(),
+			image: imageUrl || null,
+			text: text,
+			userId: currentUser?.uid,
+			username: currentUser?.displayName,
+		};
+		if (text !== "") {
+			await addDoc(collection(db, "posts"), newPost);
+			setImageUrl(null);
+			setText("");
+			navigate("/posts/confirm");
+		} else {
+			alert("textは空では投稿できません。");
+		}
+	};
+
 	return (
 		<>
 			<Header />
 			<StyledContents>
 				<StyledContainer>
-					<form>
+					<form onSubmit={createPost}>
 						<h3>投稿する</h3>
-						<StyledTextInput type="text" placeholder="Image Url" />
-						<StyledTextArea rows={10} placeholder="text"></StyledTextArea>
+						<StyledTextInput
+							type="text"
+							placeholder="Image Url"
+							onChange={handleChangeImageUrl}
+						/>
+						<StyledTextArea
+							rows={10}
+							placeholder="text"
+							onChange={handleChangeText}
+						/>
 						<StyledSubmitBtn type="submit" value="SEND" />
 					</form>
 				</StyledContainer>

@@ -188,7 +188,7 @@ const Header = () => {
 								</li>
 							</UserInfoUL>
 						</span>
-						<Link className="post" to="#">
+						<Link className="post" to="/posts/new">
 							投稿する
 						</Link>
 					</StyledHeaderUserNavBar>

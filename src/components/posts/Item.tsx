@@ -1,4 +1,5 @@
 import { ArrowDropDown } from "@mui/icons-material";
+import { display } from "@mui/system";
 import { DocumentData } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -96,11 +97,14 @@ const StyledPostUsername = styled.span`
 
 type Props = {
 	post: DocumentData;
+	detail: boolean;
+	docId: string[];
 };
 
-const Item = ({ post }: Props) => {
+const Item = ({ post, detail, docId }: Props) => {
 	const user = useAuthContext().currentUser;
 	const currentUserId = user?.uid;
+
 	return (
 		<>
 			<StyledContentPost
@@ -117,11 +121,24 @@ const Item = ({ post }: Props) => {
 					/>
 					{post.userId === currentUserId ? (
 						<StyledMoreUL>
+							{/* 詳細画面で詳細画面に遷移するためのリンクを表示しないようにするための判定 */}
+							{detail || (
+								<StyledMoreLI>
+									<Link to={`/post/${post.id}`} state={{ postId: post.id }}>
+										詳細
+									</Link>
+								</StyledMoreLI>
+							)}
 							<StyledMoreLI>
-								<Link to="#">詳細</Link>
-							</StyledMoreLI>
-							<StyledMoreLI>
-								<Link to="#">編集</Link>
+								<Link
+									to={`/post/edit/${docId}`}
+									state={{
+										post: post,
+										docId: docId,
+									}}
+								>
+									編集
+								</Link>
 							</StyledMoreLI>
 							<StyledMoreLI>
 								<Link to="#">削除</Link>
@@ -129,9 +146,14 @@ const Item = ({ post }: Props) => {
 						</StyledMoreUL>
 					) : (
 						<StyledMoreUL>
-							<StyledMoreLI>
-								<Link to="#">詳細</Link>
-							</StyledMoreLI>
+							{/* 詳細画面で詳細画面に遷移するためのリンクを表示しないようにするための判定 */}
+							{detail || (
+								<StyledMoreLI>
+									<Link to={`/post/${post.id}`} state={{ postId: post.id }}>
+										詳細
+									</Link>
+								</StyledMoreLI>
+							)}
 						</StyledMoreUL>
 					)}
 				</StyledMore>

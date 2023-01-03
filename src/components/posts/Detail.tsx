@@ -6,7 +6,7 @@ import {
 	where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { db } from "../../firebase/firebase";
 import Comment from "../comments/Comment";
@@ -32,13 +32,10 @@ const StyledCommentContainer = styled.div`
 	box-sizing: border-box;
 `;
 
-type State = {
-	postId: string;
-};
-
 const Detail = () => {
-	const location = useLocation();
-	const { postId } = location.state as State;
+	const params = useParams();
+	const postId = params.id;
+
 	const [posts, setPosts] = useState<DocumentData[]>([]);
 	const [docId, setDocId] = useState<string[]>([]);
 	const postData = collection(db, "posts");

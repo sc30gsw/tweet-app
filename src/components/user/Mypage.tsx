@@ -1,17 +1,17 @@
+import { getAuth } from "firebase/auth";
 import {
 	collection,
 	DocumentData,
-	getDocs,
 	onSnapshot,
 	orderBy,
 	query,
 	where,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import { useAuthContext } from "../../context/AuthProvider";
 import { db } from "../../firebase/firebase";
-import useAuthState from "../../lib/AuthState";
 import Footer from "../Footer";
 import Header from "../Header";
 import Item from "../posts/Item";
@@ -32,19 +32,18 @@ const StyledContents = styled.div`
 	max-width: 660px;
 `;
 
-type State = {
-	username: string;
-	userId: string;
-};
-
 const Mypage = () => {
-	useAuthState();
-	const location = useLocation();
-	const { username, userId } = location.state as State;
+	const params = useParams();
+	const userId = params.userId;
+
+	const user = useAuthContext();
+	const username = user.currentUser?.displayName;
+
 	const [posts, setPosts] = useState<DocumentData[]>([]);
 	const [docId, setDocId] = useState<string[]>([]);
 
 	const postData = collection(db, "posts");
+
 	useEffect(() => {
 		const userPostData = query(
 			postData,
@@ -60,12 +59,14 @@ const Mypage = () => {
 	return (
 		<>
 			<Header />
-			<StyledText>{username}さんの投稿一覧</StyledText>
-			<StyledContents>
-				{posts.map((post) => (
-					<Item key={post.id} post={post} detail={false} docId={docId} />
-				))}
-			</StyledContents>
+			{posts.map((post) => (
+				<div key={post.id}>
+					<StyledText>{post.username}さんの投稿一覧</StyledText>
+					<StyledContents>
+						<Item post={post} detail={false} docId={docId} />
+					</StyledContents>
+				</div>
+			))}
 			<Footer />
 		</>
 	);

@@ -124,21 +124,11 @@ const Item = ({ post, detail, docId }: Props) => {
 							{/* 詳細画面で詳細画面に遷移するためのリンクを表示しないようにするための判定 */}
 							{detail || (
 								<StyledMoreLI>
-									<Link to={`/post/${post.id}`} state={{ postId: post.id }}>
-										詳細
-									</Link>
+									<Link to={`/post/${post.id}`}>詳細</Link>
 								</StyledMoreLI>
 							)}
 							<StyledMoreLI>
-								<Link
-									to={`/post/edit/${docId}`}
-									state={{
-										post: post,
-										docId: docId,
-									}}
-								>
-									編集
-								</Link>
+								<Link to={`/post/edit/${post.id}`}>編集</Link>
 							</StyledMoreLI>
 							<StyledMoreLI>
 								<Link to="#">削除</Link>
@@ -149,9 +139,7 @@ const Item = ({ post, detail, docId }: Props) => {
 							{/* 詳細画面で詳細画面に遷移するためのリンクを表示しないようにするための判定 */}
 							{detail || (
 								<StyledMoreLI>
-									<Link to={`/post/${post.id}`} state={{ postId: post.id }}>
-										詳細
-									</Link>
+									<Link to={`/post/${post.id}`}>詳細</Link>
 								</StyledMoreLI>
 							)}
 						</StyledMoreUL>
@@ -159,10 +147,7 @@ const Item = ({ post, detail, docId }: Props) => {
 				</StyledMore>
 				<StyledPostText>{post.text}</StyledPostText>
 				<StyledPostUsername>
-					<Link
-						to={`/users/${post.userId}`}
-						state={{ username: post.username, userId: post.userId }}
-					>
+					<Link to={`/users/${post.userId}`}>
 						<span>投稿者</span>
 						{post.username}
 					</Link>

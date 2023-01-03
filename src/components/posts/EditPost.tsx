@@ -1,6 +1,14 @@
-import { doc, DocumentData, updateDoc } from "firebase/firestore";
-import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+	collection,
+	doc,
+	DocumentData,
+	onSnapshot,
+	query,
+	updateDoc,
+	where,
+} from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { db } from "../../firebase/firebase";
 import useAuthState from "../../lib/AuthState";
@@ -62,17 +70,31 @@ const StyledSubmitBtn = styled.input`
 	}
 `;
 
-type State = {
-	post: DocumentData;
-	docId: string[];
-};
-
 const EditPost = () => {
 	useAuthState();
-	const location = useLocation();
-	const { post, docId } = location.state as State;
-	const [imageUrl, setImageUrl] = useState<string>(post.imageUrl);
-	const [text, setText] = useState<string>(post.text);
+	const params = useParams();
+	const postId = params.id;
+
+	const [posts, setPosts] = useState<DocumentData[]>([]);
+	const [docId, setDocId] = useState<string[]>([]);
+	const postData = collection(db, "posts");
+	useEffect(() => {
+		const postDetailData = query(postData, where("id", "==", postId));
+		onSnapshot(postDetailData, (querySnapshot) => {
+			setPosts(querySnapshot.docs.map((doc) => doc.data()));
+			setDocId(querySnapshot.docs.map((doc) => doc.id));
+		});
+	}, []);
+
+	const [imageUrl, setImageUrl] = useState<string>("");
+	const [text, setText] = useState<string>("");
+
+	useEffect(() => {
+		posts.map((post) => {
+			setImageUrl(post.image);
+			setText(post.text);
+		});
+	}, [posts]);
 
 	const handleChangeImageUrl = (e: React.ChangeEvent<HTMLInputElement>) =>
 		setImageUrl(e.target.value);

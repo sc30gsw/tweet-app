@@ -49,13 +49,17 @@ const StyledSuccessDiv = styled.div`
 	}
 `;
 
-const Confirm = () => {
+type Props = {
+	confirmText: string;
+};
+
+const Confirm = ({ confirmText }: Props) => {
 	return (
 		<>
 			<Header />
 			<StyledContents>
 				<StyledSuccessDiv>
-					<h3>投稿が完了しました。</h3>
+					<h3>{confirmText}が完了しました。</h3>
 					<Link to="/">投稿一覧へ戻る</Link>
 				</StyledSuccessDiv>
 			</StyledContents>

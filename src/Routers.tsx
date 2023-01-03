@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Auth from "./components/auth/Auth";
 import AuthLogin from "./components/auth/AuthLogin";
+import Page404 from "./components/error/Page404";
 import Home from "./components/Home";
 import Confirm from "./components/posts/Confirm";
 import Detail from "./components/posts/Detail";
@@ -27,6 +28,7 @@ const Routers = () => {
 					path="/posts/edit/confirm"
 					element={<Confirm confirmText={"編集"} />}
 				/>
+				<Route path="*" element={<Page404 />} />
 			</Routes>
 		</BrowserRouter>
 	);

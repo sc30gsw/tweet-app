@@ -3,6 +3,8 @@ import Auth from "./components/auth/Auth";
 import AuthLogin from "./components/auth/AuthLogin";
 import Home from "./components/Home";
 import Confirm from "./components/posts/Confirm";
+import Detail from "./components/posts/Detail";
+import EditPost from "./components/posts/EditPost";
 import NewPost from "./components/posts/NewPost";
 import Mypage from "./components/user/Mypage";
 
@@ -15,7 +17,16 @@ const Routers = () => {
 				<Route path="/" element={<Home />} />
 				<Route path="/users/:userId" element={<Mypage />} />
 				<Route path="/posts/new" element={<NewPost />} />
-				<Route path="/posts/confirm" element={<Confirm />} />
+				<Route
+					path="/posts/confirm"
+					element={<Confirm confirmText={"投稿"} />}
+				/>
+				<Route path="/post/:id" element={<Detail />} />
+				<Route path="/post/edit/:id" element={<EditPost />} />
+				<Route
+					path="/posts/edit/confirm"
+					element={<Confirm confirmText={"編集"} />}
+				/>
 			</Routes>
 		</BrowserRouter>
 	);

@@ -12,6 +12,7 @@ import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { db } from "../../firebase/firebase";
 import useAuthState from "../../lib/AuthState";
+import Footer from "../Footer";
 import Header from "../Header";
 import Item from "../posts/Item";
 
@@ -41,6 +42,7 @@ const Mypage = () => {
 	const location = useLocation();
 	const { username, userId } = location.state as State;
 	const [posts, setPosts] = useState<DocumentData[]>([]);
+	const [docId, setDocId] = useState<string[]>([]);
 
 	const postData = collection(db, "posts");
 	const userPostData = query(
@@ -50,6 +52,7 @@ const Mypage = () => {
 	);
 	onSnapshot(userPostData, (querySnapshot) => {
 		setPosts(querySnapshot.docs.map((doc) => doc.data()));
+		setDocId(querySnapshot.docs.map((doc) => doc.id));
 	});
 
 	return (
@@ -58,9 +61,10 @@ const Mypage = () => {
 			<StyledText>{username}さんの投稿一覧</StyledText>
 			<StyledContents>
 				{posts.map((post) => (
-					<Item key={post.id} post={post} />
+					<Item key={post.id} post={post} detail={false} docId={docId} />
 				))}
 			</StyledContents>
+			<Footer />
 		</>
 	);
 };

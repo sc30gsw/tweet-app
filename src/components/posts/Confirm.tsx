@@ -1,6 +1,15 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import {
+	collection,
+	DocumentData,
+	onSnapshot,
+	query,
+	where,
+} from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { useAuthContext } from "../../context/AuthProvider";
+import { db } from "../../firebase/firebase";
 import Footer from "../Footer";
 import Header from "../Header";
 
@@ -54,6 +63,32 @@ type Props = {
 };
 
 const Confirm = ({ confirmText }: Props) => {
+	const params = useParams();
+	const postId = params.id;
+
+	const user = useAuthContext();
+	const currentUser = user.currentUser;
+
+	const [posts, setPosts] = useState<DocumentData[]>([]);
+
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (postId) {
+			const postData = collection(db, "posts");
+			const postDetailData = query(postData, where("id", "==", postId));
+			onSnapshot(postDetailData, (querySnapshot) => {
+				setPosts(querySnapshot.docs.map((doc) => doc.data()));
+			});
+
+			posts.map((post) => {
+				if (post.userId !== currentUser?.uid) {
+					navigate("/");
+				}
+			});
+		}
+	}, [posts]);
+
 	return (
 		<>
 			<Header />

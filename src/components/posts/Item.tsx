@@ -9,10 +9,11 @@ import {
 	where,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAuthContext } from "../../context/AuthProvider";
 import { db } from "../../firebase/firebase";
+import Home from "../Home";
 
 const StyledContentPost = styled.div`
 	margin: 20px 0;
@@ -136,8 +137,10 @@ const Item = ({ post, detail }: Props) => {
 		});
 	}, []);
 
-	const deletePost = async () => {
-		await deleteDoc(doc(db, "posts", docId[0]));
+	const deletePost = async (userId: string) => {
+		if (userId === currentUserId) {
+			await deleteDoc(doc(db, "posts", docId[0]));
+		}
 	};
 
 	return (
@@ -166,7 +169,7 @@ const Item = ({ post, detail }: Props) => {
 								<Link to={`/post/edit/${post.id}`}>編集</Link>
 							</StyledMoreLI>
 							<StyledMoreLI>
-								<StyledDeleteBtn onClick={deletePost}>
+								<StyledDeleteBtn onClick={() => deletePost(post.userId)}>
 									<Link to={`/post/delete/${post.id}`}>削除</Link>
 								</StyledDeleteBtn>
 							</StyledMoreLI>

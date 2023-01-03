@@ -10,6 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { useAuthContext } from "../../context/AuthProvider";
 import { db } from "../../firebase/firebase";
 import useAuthState from "../../lib/AuthState";
 import Footer from "../Footer";
@@ -89,8 +90,14 @@ const EditPost = () => {
 	const [imageUrl, setImageUrl] = useState<string>("");
 	const [text, setText] = useState<string>("");
 
+	const user = useAuthContext();
+	const currentUser = user.currentUser;
+	const navigate = useNavigate();
 	useEffect(() => {
 		posts.map((post) => {
+			if (post.userId !== currentUser?.uid) {
+				navigate("/");
+			}
 			setImageUrl(post.image);
 			setText(post.text);
 		});
@@ -101,8 +108,6 @@ const EditPost = () => {
 
 	const handleChangeText = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
 		setText(e.target.value);
-
-	const navigate = useNavigate();
 
 	const updatePost = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();

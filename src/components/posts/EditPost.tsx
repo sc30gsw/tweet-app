@@ -107,7 +107,7 @@ const EditPost = () => {
 						<h3>編集する</h3>
 						<StyledTextInput
 							type="text"
-							placeholder={imageUrl !== "" ? imageUrl : "Image Url"}
+							placeholder="Image Url"
 							onChange={handleChangeImageUrl}
 						/>
 						<StyledTextArea

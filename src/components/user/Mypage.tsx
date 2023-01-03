@@ -36,10 +36,8 @@ const Mypage = () => {
 	const params = useParams();
 	const userId = params.userId;
 
-	const user = useAuthContext();
-	const username = user.currentUser?.displayName;
-
 	const [posts, setPosts] = useState<DocumentData[]>([]);
+	const [username, setUsername] = useState<string>("");
 
 	const postData = collection(db, "posts");
 
@@ -52,19 +50,18 @@ const Mypage = () => {
 		onSnapshot(userPostData, (querySnapshot) => {
 			setPosts(querySnapshot.docs.map((doc) => doc.data()));
 		});
-	}, []);
+		posts.map((post) => setUsername(post.username));
+	}, [posts]);
 
 	return (
 		<>
 			<Header />
-			{posts.map((post) => (
-				<div key={post.id}>
-					<StyledText>{post.username}さんの投稿一覧</StyledText>
-					<StyledContents>
-						<Item post={post} detail={false} />
-					</StyledContents>
-				</div>
-			))}
+			<StyledText>{username}さんの投稿一覧</StyledText>
+			<StyledContents>
+				{posts.map((post) => (
+					<Item key={post.id} post={post} detail={false} />
+				))}
+			</StyledContents>
 			<Footer />
 		</>
 	);

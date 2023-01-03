@@ -40,7 +40,6 @@ const Mypage = () => {
 	const username = user.currentUser?.displayName;
 
 	const [posts, setPosts] = useState<DocumentData[]>([]);
-	const [docId, setDocId] = useState<string[]>([]);
 
 	const postData = collection(db, "posts");
 
@@ -52,7 +51,6 @@ const Mypage = () => {
 		);
 		onSnapshot(userPostData, (querySnapshot) => {
 			setPosts(querySnapshot.docs.map((doc) => doc.data()));
-			setDocId(querySnapshot.docs.map((doc) => doc.id));
 		});
 	}, []);
 
@@ -63,7 +61,7 @@ const Mypage = () => {
 				<div key={post.id}>
 					<StyledText>{post.username}さんの投稿一覧</StyledText>
 					<StyledContents>
-						<Item post={post} detail={false} docId={docId} />
+						<Item post={post} detail={false} />
 					</StyledContents>
 				</div>
 			))}

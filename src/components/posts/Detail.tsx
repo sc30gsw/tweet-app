@@ -37,13 +37,11 @@ const Detail = () => {
 	const postId = params.id;
 
 	const [posts, setPosts] = useState<DocumentData[]>([]);
-	const [docId, setDocId] = useState<string[]>([]);
 	const postData = collection(db, "posts");
 	useEffect(() => {
 		const postDetailData = query(postData, where("id", "==", postId));
 		onSnapshot(postDetailData, (querySnapshot) => {
 			setPosts(querySnapshot.docs.map((doc) => doc.data()));
-			setDocId(querySnapshot.docs.map((doc) => doc.id));
 		});
 	}, []);
 
@@ -52,7 +50,7 @@ const Detail = () => {
 			<Header />
 			<StyledContents>
 				{posts.map((post) => (
-					<Item key={post.id} post={post} detail docId={docId} />
+					<Item key={post.id} post={post} detail />
 				))}
 				<StyledCommentContainer>
 					<CommentForm />

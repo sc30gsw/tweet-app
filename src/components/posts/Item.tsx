@@ -98,12 +98,13 @@ const StyledPostUsername = styled.span`
 type Props = {
 	post: DocumentData;
 	detail: boolean;
-	docId: string[];
 };
 
-const Item = ({ post, detail, docId }: Props) => {
+const Item = ({ post, detail }: Props) => {
 	const user = useAuthContext().currentUser;
 	const currentUserId = user?.uid;
+
+	const deleteTweet = () => {};
 
 	return (
 		<>
@@ -131,7 +132,9 @@ const Item = ({ post, detail, docId }: Props) => {
 								<Link to={`/post/edit/${post.id}`}>編集</Link>
 							</StyledMoreLI>
 							<StyledMoreLI>
-								<Link to="#">削除</Link>
+								<Link to="#" onClick={deleteTweet}>
+									削除
+								</Link>
 							</StyledMoreLI>
 						</StyledMoreUL>
 					) : (

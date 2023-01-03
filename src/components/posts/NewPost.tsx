@@ -67,7 +67,7 @@ const StyledSubmitBtn = styled.input`
 const NewPost = () => {
 	useAuthState();
 	const currentUser = useAuthContext().currentUser;
-	const [imageUrl, setImageUrl] = useState<string | null>();
+	const [imageUrl, setImageUrl] = useState<string>("");
 	const [text, setText] = useState<string>("");
 
 	const handleChangeImageUrl = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -84,14 +84,14 @@ const NewPost = () => {
 		const newPost = {
 			createAt: serverTimestamp(),
 			id: uuid(),
-			image: imageUrl || null,
+			image: imageUrl,
 			text: text,
 			userId: currentUser?.uid,
 			username: currentUser?.displayName,
 		};
 		if (text !== "") {
 			await addDoc(collection(db, "posts"), newPost);
-			setImageUrl(null);
+			setImageUrl("");
 			setText("");
 			navigate("/posts/confirm");
 		} else {

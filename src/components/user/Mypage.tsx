@@ -7,7 +7,7 @@ import {
 	query,
 	where,
 } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { db } from "../../firebase/firebase";
@@ -45,15 +45,17 @@ const Mypage = () => {
 	const [docId, setDocId] = useState<string[]>([]);
 
 	const postData = collection(db, "posts");
-	const userPostData = query(
-		postData,
-		where("userId", "==", userId),
-		orderBy("createAt", "desc")
-	);
-	onSnapshot(userPostData, (querySnapshot) => {
-		setPosts(querySnapshot.docs.map((doc) => doc.data()));
-		setDocId(querySnapshot.docs.map((doc) => doc.id));
-	});
+	useEffect(() => {
+		const userPostData = query(
+			postData,
+			where("userId", "==", userId),
+			orderBy("createAt", "desc")
+		);
+		onSnapshot(userPostData, (querySnapshot) => {
+			setPosts(querySnapshot.docs.map((doc) => doc.data()));
+			setDocId(querySnapshot.docs.map((doc) => doc.id));
+		});
+	}, []);
 
 	return (
 		<>

@@ -1,4 +1,3 @@
-import { getAuth } from "firebase/auth";
 import {
 	collection,
 	DocumentData,
@@ -10,7 +9,6 @@ import {
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { useAuthContext } from "../../context/AuthProvider";
 import { db } from "../../firebase/firebase";
 import Footer from "../Footer";
 import Header from "../Header";
@@ -36,11 +34,8 @@ const Mypage = () => {
 	const params = useParams();
 	const userId = params.userId;
 
-	const user = useAuthContext();
-	const username = user.currentUser?.displayName;
-
 	const [posts, setPosts] = useState<DocumentData[]>([]);
-	const [docId, setDocId] = useState<string[]>([]);
+	const [username, setUsername] = useState<string>("");
 
 	const postData = collection(db, "posts");
 
@@ -52,21 +47,19 @@ const Mypage = () => {
 		);
 		onSnapshot(userPostData, (querySnapshot) => {
 			setPosts(querySnapshot.docs.map((doc) => doc.data()));
-			setDocId(querySnapshot.docs.map((doc) => doc.id));
 		});
-	}, []);
+		posts.map((post) => setUsername(post.username));
+	}, [posts]);
 
 	return (
 		<>
 			<Header />
-			{posts.map((post) => (
-				<div key={post.id}>
-					<StyledText>{post.username}さんの投稿一覧</StyledText>
-					<StyledContents>
-						<Item post={post} detail={false} docId={docId} />
-					</StyledContents>
-				</div>
-			))}
+			<StyledText>{username}さんの投稿一覧</StyledText>
+			<StyledContents>
+				{posts.map((post) => (
+					<Item key={post.id} post={post} detail={false} />
+				))}
+			</StyledContents>
 			<Footer />
 		</>
 	);

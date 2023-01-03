@@ -28,6 +28,10 @@ const Routers = () => {
 					path="/posts/edit/confirm"
 					element={<Confirm confirmText={"編集"} />}
 				/>
+				<Route
+					path="/post/delete/:id"
+					element={<Confirm confirmText={"削除"} />}
+				/>
 				<Route path="*" element={<Page404 />} />
 			</Routes>
 		</BrowserRouter>

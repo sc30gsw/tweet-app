@@ -1,9 +1,18 @@
 import { ArrowDropDown } from "@mui/icons-material";
-import { display } from "@mui/system";
-import { DocumentData } from "firebase/firestore";
+import {
+	collection,
+	deleteDoc,
+	doc,
+	DocumentData,
+	onSnapshot,
+	query,
+	where,
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useAuthContext } from "../../context/AuthProvider";
+import { db } from "../../firebase/firebase";
 
 const StyledContentPost = styled.div`
 	margin: 20px 0;
@@ -60,7 +69,21 @@ const StyledMoreLI = styled.li`
 		a {
 			color: #fff;
 		}
+		button {
+			color: #fff;
+		}
 	}
+`;
+
+const StyledDeleteBtn = styled.button`
+	color: gray;
+	outline: none;
+	border: none;
+	background-color: transparent;
+	font-size: 12px;
+	text-align: left;
+	padding: 0;
+	cursor: pointer;
 `;
 
 const StyledPostText = styled.p`
@@ -98,12 +121,24 @@ const StyledPostUsername = styled.span`
 type Props = {
 	post: DocumentData;
 	detail: boolean;
-	docId: string[];
 };
 
-const Item = ({ post, detail, docId }: Props) => {
+const Item = ({ post, detail }: Props) => {
 	const user = useAuthContext().currentUser;
 	const currentUserId = user?.uid;
+
+	const [docId, setDocId] = useState<string[]>([]);
+	const postData = collection(db, "posts");
+	useEffect(() => {
+		const postDetailData = query(postData, where("id", "==", post.id));
+		onSnapshot(postDetailData, (querySnapshot) => {
+			setDocId(querySnapshot.docs.map((doc) => doc.id));
+		});
+	}, []);
+
+	const deletePost = async () => {
+		await deleteDoc(doc(db, "posts", docId[0]));
+	};
 
 	return (
 		<>
@@ -131,7 +166,9 @@ const Item = ({ post, detail, docId }: Props) => {
 								<Link to={`/post/edit/${post.id}`}>編集</Link>
 							</StyledMoreLI>
 							<StyledMoreLI>
-								<Link to="#">削除</Link>
+								<StyledDeleteBtn onClick={deletePost}>
+									<Link to={`/post/delete/${post.id}`}>削除</Link>
+								</StyledDeleteBtn>
 							</StyledMoreLI>
 						</StyledMoreUL>
 					) : (

@@ -1,5 +1,4 @@
 import { ArrowDropDown } from "@mui/icons-material";
-import { display } from "@mui/system";
 import {
 	collection,
 	deleteDoc,
@@ -10,7 +9,7 @@ import {
 	where,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useAuthContext } from "../../context/AuthProvider";
 import { db } from "../../firebase/firebase";

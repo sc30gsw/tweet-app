@@ -1,4 +1,3 @@
-import { getAuth } from "firebase/auth";
 import {
 	collection,
 	DocumentData,
@@ -10,7 +9,6 @@ import {
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { useAuthContext } from "../../context/AuthProvider";
 import { db } from "../../firebase/firebase";
 import Footer from "../Footer";
 import Header from "../Header";

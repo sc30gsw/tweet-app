@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { useAuthContext } from "../../context/AuthProvider";
+import Comment from "./Comment";
 
 const StyledCommentArea = styled.textarea`
 	width: 100%;
@@ -24,14 +26,21 @@ const StyledCommentBtn = styled.input`
 `;
 
 const CommentForm = () => {
+	const user = useAuthContext();
+	const currentUser = user.currentUser;
 	return (
-		<form>
-			<StyledCommentArea
-				placeholder="コメントする"
-				rows={2}
-			></StyledCommentArea>
-			<StyledCommentBtn type="submit" value="SEND" />
-		</form>
+		<>
+			{currentUser && (
+				<form>
+					<StyledCommentArea
+						placeholder="コメントする"
+						rows={2}
+					></StyledCommentArea>
+					<StyledCommentBtn type="submit" value="SEND" />
+				</form>
+			)}
+			<Comment />
+		</>
 	);
 };
 

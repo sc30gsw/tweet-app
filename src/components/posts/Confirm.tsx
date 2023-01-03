@@ -66,8 +66,7 @@ const Confirm = ({ confirmText }: Props) => {
 	const params = useParams();
 	const postId = params.id;
 
-	const user = useAuthContext();
-	const currentUser = user.currentUser;
+	const currentUser = useAuthContext().currentUser;
 
 	const [posts, setPosts] = useState<DocumentData[]>([]);
 

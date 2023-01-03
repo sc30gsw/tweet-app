@@ -26,8 +26,7 @@ const StyledCommentBtn = styled.input`
 `;
 
 const CommentForm = () => {
-	const user = useAuthContext();
-	const currentUser = user.currentUser;
+	const currentUser = useAuthContext().currentUser;
 	return (
 		<>
 			{currentUser && (

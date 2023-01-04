@@ -89,6 +89,7 @@ const EditPost = () => {
 
 	const [imageUrl, setImageUrl] = useState<string>("");
 	const [text, setText] = useState<string>("");
+	const [errMsg, setErrMsg] = useState<string>("");
 
 	const user = useAuthContext();
 	const currentUser = user.currentUser;
@@ -119,9 +120,10 @@ const EditPost = () => {
 			});
 			setImageUrl("");
 			setText("");
+			setErrMsg("");
 			navigate("/posts/edit/confirm");
 		} else {
-			alert("textは空では更新できません。");
+			setErrMsg("textは空では更新できません。");
 		}
 	};
 
@@ -132,13 +134,18 @@ const EditPost = () => {
 				<StyledContainer>
 					<form onSubmit={updatePost}>
 						<h3>編集する</h3>
+						<span style={{ color: "red" }}>
+							<b>{errMsg}</b>
+						</span>
 						<StyledTextInput
 							type="text"
 							placeholder="Image Url"
+							value={imageUrl && imageUrl}
 							onChange={handleChangeImageUrl}
 						/>
 						<StyledTextArea
 							rows={10}
+							placeholder="text"
 							value={text}
 							onChange={handleChangeText}
 						/>

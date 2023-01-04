@@ -69,6 +69,7 @@ const NewPost = () => {
 	const currentUser = useAuthContext().currentUser;
 	const [imageUrl, setImageUrl] = useState<string>("");
 	const [text, setText] = useState<string>("");
+	const [errMsg, setErrMsg] = useState<string>("");
 
 	const handleChangeImageUrl = (e: React.ChangeEvent<HTMLInputElement>) =>
 		setImageUrl(e.target.value);
@@ -93,9 +94,10 @@ const NewPost = () => {
 			await addDoc(collection(db, "posts"), newPost);
 			setImageUrl("");
 			setText("");
+			setErrMsg("");
 			navigate("/posts/confirm");
 		} else {
-			alert("textは空では投稿できません。");
+			setErrMsg("textは空では投稿できません。");
 		}
 	};
 
@@ -106,6 +108,9 @@ const NewPost = () => {
 				<StyledContainer>
 					<form onSubmit={createPost}>
 						<h3>投稿する</h3>
+						<span style={{ color: "red" }}>
+							<b>{errMsg}</b>
+						</span>
 						<StyledTextInput
 							type="text"
 							placeholder="Image Url"

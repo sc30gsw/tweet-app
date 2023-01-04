@@ -15,6 +15,7 @@ import { db } from "../../firebase/firebase";
 import useAuthState from "../../lib/AuthState";
 import Footer from "../Footer";
 import Header from "../Header";
+import Home from "../Home";
 
 const StyledContents = styled.div`
 	width: 100%;
@@ -89,6 +90,7 @@ const EditPost = () => {
 
 	const [imageUrl, setImageUrl] = useState<string>("");
 	const [text, setText] = useState<string>("");
+	const [errMsg, setErrMsg] = useState<string>("");
 
 	const user = useAuthContext();
 	const currentUser = user.currentUser;
@@ -97,6 +99,7 @@ const EditPost = () => {
 		posts.map((post) => {
 			if (post.userId !== currentUser?.uid) {
 				navigate("/");
+				return <Home />;
 			}
 			setImageUrl(post.image);
 			setText(post.text);
@@ -119,9 +122,10 @@ const EditPost = () => {
 			});
 			setImageUrl("");
 			setText("");
+			setErrMsg("");
 			navigate("/posts/edit/confirm");
 		} else {
-			alert("textは空では更新できません。");
+			setErrMsg("textは空では更新できません。");
 		}
 	};
 
@@ -132,13 +136,18 @@ const EditPost = () => {
 				<StyledContainer>
 					<form onSubmit={updatePost}>
 						<h3>編集する</h3>
+						<span style={{ color: "red" }}>
+							<b>{errMsg}</b>
+						</span>
 						<StyledTextInput
 							type="text"
 							placeholder="Image Url"
+							value={imageUrl && imageUrl}
 							onChange={handleChangeImageUrl}
 						/>
 						<StyledTextArea
 							rows={10}
+							placeholder="text"
 							value={text}
 							onChange={handleChangeText}
 						/>

@@ -12,6 +12,7 @@ import { useAuthContext } from "../../context/AuthProvider";
 import { db } from "../../firebase/firebase";
 import Footer from "../Footer";
 import Header from "../Header";
+import Home from "../Home";
 
 const StyledContents = styled.div`
 	width: 100%;
@@ -66,8 +67,7 @@ const Confirm = ({ confirmText }: Props) => {
 	const params = useParams();
 	const postId = params.id;
 
-	const user = useAuthContext();
-	const currentUser = user.currentUser;
+	const currentUser = useAuthContext().currentUser;
 
 	const [posts, setPosts] = useState<DocumentData[]>([]);
 
@@ -84,6 +84,7 @@ const Confirm = ({ confirmText }: Props) => {
 			posts.map((post) => {
 				if (post.userId !== currentUser?.uid) {
 					navigate("/");
+					return <Home />;
 				}
 			});
 		}

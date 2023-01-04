@@ -15,6 +15,7 @@ import { db } from "../../firebase/firebase";
 import useAuthState from "../../lib/AuthState";
 import Footer from "../Footer";
 import Header from "../Header";
+import Home from "../Home";
 
 const StyledContents = styled.div`
 	width: 100%;
@@ -98,6 +99,7 @@ const EditPost = () => {
 		posts.map((post) => {
 			if (post.userId !== currentUser?.uid) {
 				navigate("/");
+				return <Home />;
 			}
 			setImageUrl(post.image);
 			setText(post.text);

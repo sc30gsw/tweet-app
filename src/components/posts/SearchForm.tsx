@@ -7,8 +7,12 @@ import {
 	where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useAuthContext } from "../../context/AuthProvider";
 import { db } from "../../firebase/firebase";
+import useAuthState from "../../lib/AuthState";
+import AuthLogin from "../auth/AuthLogin";
 import Contents from "./Contents";
 
 const StyledSearchForm = styled.form`
@@ -36,6 +40,7 @@ const StyledSearchBtn = styled.input`
 `;
 
 const SearchForm = () => {
+	const currentUser = useAuthContext().currentUser;
 	const [posts, setPosts] = useState<DocumentData[]>([]);
 
 	useEffect(() => {
@@ -51,8 +56,14 @@ const SearchForm = () => {
 	const getSearchText = (e: React.ChangeEvent<HTMLInputElement>) =>
 		setSearchText(e.target.value);
 
+	const navigate = useNavigate();
 	const searchPosts = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+
+		if (!currentUser) {
+			navigate("/login");
+			return <AuthLogin />;
+		}
 
 		if (searchText !== "") {
 			const postData = collection(db, "posts");
